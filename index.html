@@ -372,5 +372,47 @@ onAuthStateChanged(auth, (user) => {
   }
 });
 </script>  
+  <script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged }
+from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyAGwaIUPulsO721G-3yIDnLzYaKgQpYybY",
+  authDomain: "snhit-chat-hub.firebaseapp.com",
+  projectId: "snhit-chat-hub",
+  storageBucket: "snhit-chat-hub.firebasestorage.app",
+  messagingSenderId: "241439945461",
+  appId: "1:241439945461:web:95258c72967e4756dd8bbc"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+
+/* Signup */
+window.signup = function(email, password){
+  createUserWithEmailAndPassword(auth, email, password)
+  .then(() => alert("Account Created"))
+  .catch(err => alert(err.message));
+}
+
+/* Login */
+window.login = function(email, password){
+  signInWithEmailAndPassword(auth, email, password)
+  .then(() => alert("Login Success"))
+  .catch(err => alert("Wrong Email/Password"));
+}
+
+/* Auto login */
+onAuthStateChanged(auth, (user) => {
+  if (user) {
+    document.getElementById("loginPage").style.display = "none";
+    document.getElementById("app").style.display = "block";
+  } else {
+    document.getElementById("loginPage").style.display = "block";
+    document.getElementById("app").style.display = "none";
+  }
+});
+</script>
 </body>
 </html>
