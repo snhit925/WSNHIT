@@ -14,7 +14,7 @@
 }
 
 body{
-  background:#0d0d0d;
+  background:#111;
   color:#fff;
   display:flex;
   justify-content:center;
@@ -23,11 +23,10 @@ body{
   padding:15px;
 }
 
-/* LOGIN */
 .chat-box{
   width:100%;
   max-width:500px;
-  background:#1c1c1c;
+  background:#222;
   border-radius:20px;
   padding:20px;
   border:1px solid #00ff88;
@@ -39,46 +38,26 @@ h1,h2{
   margin-bottom:20px;
 }
 
-/* CHAT BOX */
 #messages{
-  height:400px;
+  height:350px;
   overflow-y:auto;
   background:#111;
   padding:15px;
   border-radius:15px;
   margin-bottom:15px;
-  display:flex;
-  flex-direction:column;
-  gap:10px;
 }
 
-/* MESSAGE STYLE (INSTAGRAM LIKE) */
 .message{
-  max-width:70%;
-  padding:10px 12px;
-  border-radius:15px;
-  font-size:14px;
-  word-break:break-word;
+  background:#333;
+  padding:12px;
+  border-radius:12px;
+  margin-bottom:10px;
 }
 
-/* OTHERS */
-.left{
-  background:#2c2c2c;
-  align-self:flex-start;
-}
-
-/* YOU */
-.right{
-  background:#00ff88;
-  color:#000;
-  align-self:flex-end;
-}
-
-/* USERNAME */
-.name{
-  font-size:11px;
-  opacity:0.7;
-  margin-bottom:3px;
+.mine{
+  background:#005f3c;
+  margin-left:auto;
+  text-align:right;
 }
 
 .input-area{
@@ -104,26 +83,25 @@ button{
   cursor:pointer;
 }
 
-#app{ display:none; }
+#chatBox{ display:none; }
 </style>
 </head>
 
 <body>
 
-<!-- LOGIN -->
+<!-- 🔥 LOGIN SCREEN -->
 <div id="loginPage" class="chat-box">
   <h2>Login / Signup</h2>
 
   <input id="email" placeholder="Email">
   <input id="password" placeholder="Password">
-  <input id="username" placeholder="Enter Username">
 
-  <button onclick="signup()">Sign Up</button>
-  <button onclick="login()">Login</button>
+  <button onclick="signup(email.value,password.value)">Sign Up</button>
+  <button onclick="login(email.value,password.value)">Login</button>
 </div>
 
-<!-- CHAT -->
-<div id="app" class="chat-box">
+<!-- 🔥 CHAT APP -->
+<div id="app" class="chat-box" style="display:none;">
   <h1>💬 SNHIT Chat Hub</h1>
 
   <div id="messages"></div>
@@ -136,6 +114,7 @@ button{
   <button onclick="logout()" style="margin-top:10px;">Logout</button>
 </div>
 
+<!-- 🔥 FIREBASE SCRIPT (ONLY ONE CLEAN VERSION) -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import {
@@ -156,7 +135,7 @@ import {
   serverTimestamp
 } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
-/* FIREBASE */
+/* 🔥 YOUR FIREBASE CONFIG */
 const firebaseConfig = {
   apiKey: "AIzaSyAGwaIUPulsO721G-3yIDnLzYaKgQpYybY",
   authDomain: "snhit-chat-hub.firebaseapp.com",
@@ -171,21 +150,15 @@ const auth = getAuth(app);
 const db = getFirestore(app);
 
 /* LOGIN */
-window.login = async function(){
-  const email = email.value;
-  const password = password.value;
-
-  await signInWithEmailAndPassword(auth,email,password);
+window.login = function(email, password){
+  signInWithEmailAndPassword(auth,email,password)
+  .catch(err => alert(err.message));
 }
 
 /* SIGNUP */
-window.signup = async function(){
-  const email = email.value;
-  const password = password.value;
-  const username = document.getElementById("username").value;
-
-  await createUserWithEmailAndPassword(auth,email,password);
-  localStorage.setItem("username",username);
+window.signup = function(email, password){
+  createUserWithEmailAndPassword(auth,email,password)
+  .catch(err => alert(err.message));
 }
 
 /* LOGOUT */
@@ -193,7 +166,7 @@ window.logout = function(){
   signOut(auth);
 }
 
-/* UI SWITCH */
+/* AUTO LOGIN UI SWITCH */
 onAuthStateChanged(auth,(user)=>{
   if(user){
     document.getElementById("loginPage").style.display="none";
@@ -204,21 +177,18 @@ onAuthStateChanged(auth,(user)=>{
   }
 });
 
-/* SEND MESSAGE */
+/* CHAT FUNCTION */
 window.sendMessage = async function(){
-  const text = document.getElementById("messageInput").value;
-  if(!text.trim()) return;
+  const input = document.getElementById("messageInput");
 
-  const username = localStorage.getItem("username") || "Anonymous";
+  if(!input.value.trim()) return;
 
   await addDoc(collection(db,"messages"),{
-    text,
-    name: username,
-    uid: auth.currentUser.uid,
+    text: input.value,
     createdAt: serverTimestamp()
   });
 
-  document.getElementById("messageInput").value="";
+  input.value="";
 }
 
 /* LOAD MESSAGES */
@@ -230,18 +200,9 @@ onSnapshot(q,(snapshot)=>{
 
   snapshot.forEach(doc=>{
     const data = doc.data();
-
     const div = document.createElement("div");
-
-    const isMe = auth.currentUser && data.uid === auth.currentUser.uid;
-
-    div.className = "message " + (isMe ? "right" : "left");
-
-    div.innerHTML = `
-      <div class="name">${data.name || "Anonymous"}</div>
-      <div>${data.text}</div>
-    `;
-
+    div.className="message";
+    div.innerText = data.text;
     box.appendChild(div);
   });
 
