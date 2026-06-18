@@ -152,7 +152,41 @@ import {
 
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
+const auth = getAuth(app);
 
+const email = document.getElementById("email");
+const password = document.getElementById("password");
+
+document.getElementById("signupBtn")
+.addEventListener("click", async () => {
+
+  await createUserWithEmailAndPassword(
+    auth,
+    email.value,
+    password.value
+  );
+
+  alert("Account created ✅");
+});
+
+document.getElementById("loginBtn")
+.addEventListener("click", async () => {
+
+  await signInWithEmailAndPassword(
+    auth,
+    email.value,
+    password.value
+  );
+
+  alert("Logged in ✅");
+});
+
+onAuthStateChanged(auth, (user) => {
+
+  if(user){
+    document.getElementById("authBox").style.display = "none";
+  }
+});
     const messages = document.getElementById("messages");
     const input = document.getElementById("messageInput");
     const sendBtn = document.getElementById("sendBtn");
