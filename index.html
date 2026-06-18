@@ -19,7 +19,7 @@
       display:flex;
       justify-content:center;
       align-items:center;
-      height:100vh;
+      min-height:100vh;
       padding:15px;
     }
 
@@ -30,9 +30,10 @@
       border-radius:20px;
       padding:20px;
       border:1px solid #00ff88;
+      box-shadow:0 0 20px rgba(0,255,136,.2);
     }
 
-    h1{
+    h1,h2{
       text-align:center;
       color:#00ff88;
       margin-bottom:20px;
@@ -49,9 +50,31 @@
 
     .message{
       background:#333;
-      padding:10px;
-      border-radius:10px;
+      padding:12px;
+      border-radius:12px;
       margin-bottom:10px;
+      word-break:break-word;
+    }
+
+    .message-header{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      margin-bottom:5px;
+    }
+
+    .nickname{
+      color:#00ff88;
+      font-weight:bold;
+    }
+
+    .delete-btn{
+      background:none;
+      border:none;
+      color:#ff4d4d;
+      cursor:pointer;
+      font-size:16px;
+      padding:0;
     }
 
     .input-area{
@@ -76,11 +99,16 @@
       font-weight:bold;
       cursor:pointer;
     }
+
+    #nicknameBox{
+      display:block;
+    }
+
+    #chatBox{
+      display:none;
+    }
   </style>
 </head>
-
-<body>
-  </head>
 
 <body>
 
@@ -94,64 +122,34 @@
       maxlength="20"
     >
 
-    <button id="joinBtn" style="margin-top:15px;">
+    <button id="joinBtn" style="margin-top:15px;width:100%;">
       Join Chat
     </button>
 
   </div>
 
-  <div class="chat-box">
-<div id="authBox" class="chat-box" style="margin-bottom:20px;">
+  <div id="chatBox" class="chat-box">
 
-  <h2 style="text-align:center;margin-bottom:15px;">
-    🔐 Login / Signup
-  </h2>
-
-  <input
-    id="email"
-    type="email"
-    placeholder="Email"
-    style="width:100%;margin-bottom:10px;"
-  >
-
-  <input
-    id="password"
-    type="password"
-    placeholder="Password"
-    style="width:100%;margin-bottom:10px;"
-  >
-
-  <div style="display:flex;gap:10px;">
-    <button id="signupBtn" style="flex:1;">
-      Sign Up
-    </button>
-
-    <button id="loginBtn" style="flex:1;">
-      Login
-    </button>
-  </div>
-
-</div>
-  <div class="chat-box">
     <h1>💬 SNHIT Chat Hub</h1>
 
     <div id="messages"></div>
 
     <div class="input-area">
-      <input id="messageInput" placeholder="Type a message...">
+      <input
+        id="messageInput"
+        placeholder="Type a message..."
+      >
+
       <button id="sendBtn">Send</button>
     </div>
+
   </div>
 
   <script type="module">
 
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-app.js";
-import {
-  getAuth,
-  createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
-  onAuthStateChanged
-} from "https://www.gstatic.com/firebasejs/11.9.1/firebase-auth.js";
+    import { initializeApp }
+    from "https://www.gstatic.com/firebasejs/11.9.1/firebase-app.js";
+
     import {
       getFirestore,
       collection,
@@ -159,8 +157,11 @@ import {
       query,
       orderBy,
       onSnapshot,
-      serverTimestamp
-    } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-firestore.js";
+      serverTimestamp,
+      deleteDoc,
+      doc
+    }
+    from "https://www.gstatic.com/firebasejs/11.9.1/firebase-firestore.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyAGwaIUPulsO721G-3yIDnLzYaKgQpYybY",
@@ -173,50 +174,47 @@ import {
 
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
-const auth = getAuth(app);
 
-const email = document.getElementById("email");
-const password = document.getElementById("password");
+    const nicknameBox = document.getElementById("nicknameBox");
+    const chatBox = document.getElementById("chatBox");
 
-document.getElementById("signupBtn")
-.addEventListener("click", async () => {
+    const nicknameInput = document.getElementById("nicknameInput");
+    const joinBtn = document.getElementById("joinBtn");
 
-  await createUserWithEmailAndPassword(
-    auth,
-    email.value,
-    password.value
-  );
-
-  alert("Account created ✅");
-});
-
-document.getElementById("loginBtn")
-.addEventListener("click", async () => {
-
-  await signInWithEmailAndPassword(
-    auth,
-    email.value,
-    password.value
-  );
-
-  alert("Logged in ✅");
-});
-
-onAuthStateChanged(auth, (user) => {
-
-  if(user){
-    document.getElementById("authBox").style.display = "none";
-  }
-});
     const messages = document.getElementById("messages");
     const input = document.getElementById("messageInput");
     const sendBtn = document.getElementById("sendBtn");
+
+    let nickname = localStorage.getItem("nickname");
+
+    if(nickname){
+      nicknameBox.style.display = "none";
+      chatBox.style.display = "block";
+    }
+
+    joinBtn.addEventListener("click", () => {
+
+      const value = nicknameInput.value.trim();
+
+      if(!value){
+        alert("Please enter a nickname");
+        return;
+      }
+
+      nickname = value;
+
+      localStorage.setItem("nickname", nickname);
+
+      nicknameBox.style.display = "none";
+      chatBox.style.display = "block";
+    });
 
     sendBtn.addEventListener("click", async () => {
 
       if(input.value.trim() === "") return;
 
       await addDoc(collection(db, "messages"), {
+        nickname: nickname,
         text: input.value,
         createdAt: serverTimestamp()
       });
@@ -233,14 +231,40 @@ onAuthStateChanged(auth, (user) => {
 
       messages.innerHTML = "";
 
-      snapshot.forEach((doc) => {
+      snapshot.forEach((item) => {
+
+        const data = item.data();
 
         const div = document.createElement("div");
-
         div.className = "message";
-        div.innerText = doc.data().text;
+
+        div.innerHTML = `
+          <div class="message-header">
+            <span class="nickname">${data.nickname}</span>
+
+            ${
+              data.nickname === nickname
+              ? `<button class="delete-btn"
+                   data-id="${item.id}">🗑️</button>`
+              : ""
+            }
+          </div>
+
+          <div>${data.text}</div>
+        `;
 
         messages.appendChild(div);
+      });
+
+      document.querySelectorAll(".delete-btn")
+      .forEach(btn => {
+
+        btn.onclick = async () => {
+
+          const id = btn.getAttribute("data-id");
+
+          await deleteDoc(doc(db, "messages", id));
+        };
       });
 
       messages.scrollTop = messages.scrollHeight;
