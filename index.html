@@ -30,7 +30,6 @@ body{
   border-radius:20px;
   padding:20px;
   border:1px solid #00ff88;
-  box-shadow:0 0 20px rgba(0,255,136,.2);
 }
 
 h1,h2{
@@ -53,7 +52,6 @@ h1,h2{
   padding:12px;
   border-radius:12px;
   margin-bottom:10px;
-  word-break:break-word;
 }
 
 .mine{
@@ -61,29 +59,6 @@ h1,h2{
   margin-left:auto;
   text-align:right;
 }
-
-.message-header{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  margin-bottom:5px;
-}
-
-.nickname{
-  color:#00ff88;
-  font-weight:bold;
-}
-
-.delete-btn, .edit-btn{
-  background:none;
-  border:none;
-  cursor:pointer;
-  font-size:14px;
-  margin-left:5px;
-}
-
-.delete-btn{ color:#ff4d4d; }
-.edit-btn{ color:#ffd166; }
 
 .input-area{
   display:flex;
@@ -108,43 +83,48 @@ button{
   cursor:pointer;
 }
 
-button:disabled{
-  opacity:0.5;
-  cursor:not-allowed;
-}
-
 #chatBox{ display:none; }
 </style>
 </head>
 
 <body>
 
-<div id="nicknameBox" class="chat-box">
-  <h2>👋 Welcome to SNHIT Chat Hub</h2>
+<!-- 🔥 LOGIN SCREEN -->
+<div id="loginPage" class="chat-box">
+  <h2>Login / Signup</h2>
 
-  <input id="nicknameInput" placeholder="Enter your nickname" maxlength="20">
+  <input id="email" placeholder="Email">
+  <input id="password" placeholder="Password">
 
-  <button id="joinBtn" style="margin-top:15px;width:100%;">
-    Join Chat
-  </button>
+  <button onclick="signup(email.value,password.value)">Sign Up</button>
+  <button onclick="login(email.value,password.value)">Login</button>
 </div>
 
-<div id="chatBox" class="chat-box">
-
+<!-- 🔥 CHAT APP -->
+<div id="app" class="chat-box" style="display:none;">
   <h1>💬 SNHIT Chat Hub</h1>
 
   <div id="messages"></div>
 
   <div class="input-area">
-    <input id="messageInput" placeholder="Type a message...">
-    <button id="sendBtn" disabled>Send</button>
+    <input id="messageInput" placeholder="Type message...">
+    <button onclick="sendMessage()">Send</button>
   </div>
 
+  <button onclick="logout()" style="margin-top:10px;">Logout</button>
 </div>
 
+<!-- 🔥 FIREBASE SCRIPT (ONLY ONE CLEAN VERSION) -->
 <script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import {
+  getAuth,
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  signOut,
+  onAuthStateChanged
+} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 
-import { initializeApp } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-app.js";
 import {
   getFirestore,
   collection,
@@ -152,12 +132,10 @@ import {
   query,
   orderBy,
   onSnapshot,
-  serverTimestamp,
-  deleteDoc,
-  doc,
-  updateDoc
-} from "https://www.gstatic.com/firebasejs/11.9.1/firebase-firestore.js";
+  serverTimestamp
+} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
+/* 🔥 YOUR FIREBASE CONFIG */
 const firebaseConfig = {
   apiKey: "AIzaSyAGwaIUPulsO721G-3yIDnLzYaKgQpYybY",
   authDomain: "snhit-chat-hub.firebaseapp.com",
@@ -168,251 +146,69 @@ const firebaseConfig = {
 };
 
 const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
 const db = getFirestore(app);
 
-const nicknameBox = document.getElementById("nicknameBox");
-const chatBox = document.getElementById("chatBox");
-
-const nicknameInput = document.getElementById("nicknameInput");
-const joinBtn = document.getElementById("joinBtn");
-
-const messages = document.getElementById("messages");
-const input = document.getElementById("messageInput");
-const sendBtn = document.getElementById("sendBtn");
-
-let nickname = localStorage.getItem("nickname");
-
-if(nickname){
-  nicknameBox.style.display = "none";
-  chatBox.style.display = "block";
+/* LOGIN */
+window.login = function(email, password){
+  signInWithEmailAndPassword(auth,email,password)
+  .catch(err => alert(err.message));
 }
 
-joinBtn.onclick = () => {
-  const value = nicknameInput.value.trim();
-  if(!value) return alert("Enter nickname");
+/* SIGNUP */
+window.signup = function(email, password){
+  createUserWithEmailAndPassword(auth,email,password)
+  .catch(err => alert(err.message));
+}
 
-  nickname = value;
-  localStorage.setItem("nickname", nickname);
+/* LOGOUT */
+window.logout = function(){
+  signOut(auth);
+}
 
-  nicknameBox.style.display = "none";
-  chatBox.style.display = "block";
-};
-
-input.addEventListener("input", () => {
-  sendBtn.disabled = input.value.trim() === "";
+/* AUTO LOGIN UI SWITCH */
+onAuthStateChanged(auth,(user)=>{
+  if(user){
+    document.getElementById("loginPage").style.display="none";
+    document.getElementById("app").style.display="block";
+  }else{
+    document.getElementById("loginPage").style.display="block";
+    document.getElementById("app").style.display="none";
+  }
 });
 
-input.addEventListener("keydown", (e) => {
-  if(e.key === "Enter") sendBtn.click();
-});
+/* CHAT FUNCTION */
+window.sendMessage = async function(){
+  const input = document.getElementById("messageInput");
 
-sendBtn.onclick = async () => {
   if(!input.value.trim()) return;
 
-  await addDoc(collection(db, "messages"), {
-    nickname,
+  await addDoc(collection(db,"messages"),{
     text: input.value,
     createdAt: serverTimestamp()
   });
 
-  input.value = "";
-  sendBtn.disabled = true;
-};
+  input.value="";
+}
 
-const q = query(collection(db, "messages"), orderBy("createdAt"));
+/* LOAD MESSAGES */
+const q = query(collection(db,"messages"),orderBy("createdAt"));
 
-onSnapshot(q, (snapshot) => {
-  messages.innerHTML = "";
+onSnapshot(q,(snapshot)=>{
+  const box = document.getElementById("messages");
+  box.innerHTML="";
 
-  snapshot.forEach((item) => {
-    const data = item.data();
-    const isMine = data.nickname === nickname;
-
+  snapshot.forEach(doc=>{
+    const data = doc.data();
     const div = document.createElement("div");
-    div.className = "message " + (isMine ? "mine" : "");
-
-    const time = data.createdAt?.seconds
-      ? new Date(data.createdAt.seconds * 1000).toLocaleTimeString()
-      : "";
-
-    div.innerHTML = `
-      <div class="message-header">
-        <span class="nickname">${data.nickname}</span>
-
-        ${isMine ? `
-          <div>
-            <button class="edit-btn" data-id="${item.id}">✏️</button>
-            <button class="delete-btn" data-id="${item.id}">🗑️</button>
-          </div>
-        ` : ""}
-      </div>
-
-      <div>${data.text}</div>
-      <small style="opacity:0.6">${time}</small>
-    `;
-
-    messages.appendChild(div);
+    div.className="message";
+    div.innerText = data.text;
+    box.appendChild(div);
   });
 
-  // delete
-  document.querySelectorAll(".delete-btn").forEach(btn => {
-    btn.onclick = async () => {
-      if(!confirm("Delete message?")) return;
-      await deleteDoc(doc(db, "messages", btn.dataset.id));
-    };
-  });
-
-  // edit
-  document.querySelectorAll(".edit-btn").forEach(btn => {
-    btn.onclick = async () => {
-      const newText = prompt("Edit message:");
-      if(!newText) return;
-
-      await updateDoc(doc(db, "messages", btn.dataset.id), {
-        text: newText
-      });
-    };
-  });
-
-  messages.scrollTop = messages.scrollHeight;
-});
-
-</script>
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged }
-from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-
-const firebaseConfig = {
-  apiKey: "YOUR_API_KEY",
-  authDomain: "YOUR_AUTH_DOMAIN",
-  projectId: "YOUR_PROJECT_ID"
-};
-
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-
-// SIGN UP
-window.signup = function(email, password){
-  createUserWithEmailAndPassword(auth, email, password)
-  .then(() => {
-    alert("Account Created");
-  })
-  .catch((error) => {
-    alert(error.message);
-  });
-}
-
-// LOGIN
-window.login = function(email, password){
-  signInWithEmailAndPassword(auth, email, password)
-  .then(() => {
-    alert("Login Successful");
-  })
-  .catch((error) => {
-    alert("Wrong Email or Password");
-  });
-}
-
-// AUTO LOGIN CHECK (important)
-onAuthStateChanged(auth, (user) => {
-  if (user) {
-    document.getElementById("loginPage").style.display = "none";
-    document.getElementById("app").style.display = "block";
-  } else {
-    document.getElementById("loginPage").style.display = "block";
-    document.getElementById("app").style.display = "none";
-  }
+  box.scrollTop = box.scrollHeight;
 });
 </script>
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged }
-from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 
-const firebaseConfig = {
-  apiKey: "YOUR_API_KEY",
-  authDomain: "YOUR_AUTH_DOMAIN",
-  projectId: "YOUR_PROJECT_ID"
-};
-
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-
-// SIGN UP
-window.signup = function(email, password){
-  createUserWithEmailAndPassword(auth, email, password)
-  .then(() => {
-    alert("Account Created");
-  })
-  .catch((error) => {
-    alert(error.message);
-  });
-}
-
-// LOGIN
-window.login = function(email, password){
-  signInWithEmailAndPassword(auth, email, password)
-  .then(() => {
-    alert("Login Successful");
-  })
-  .catch((error) => {
-    alert("Wrong Email or Password");
-  });
-}
-
-// AUTO LOGIN (important)
-onAuthStateChanged(auth, (user) => {
-  if (user) {
-    document.getElementById("loginPage").style.display = "none";
-    document.getElementById("app").style.display = "block";
-  } else {
-    document.getElementById("loginPage").style.display = "block";
-    document.getElementById("app").style.display = "none";
-  }
-});
-</script>  
-  <script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged }
-from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-
-const firebaseConfig = {
-  apiKey: "AIzaSyAGwaIUPulsO721G-3yIDnLzYaKgQpYybY",
-  authDomain: "snhit-chat-hub.firebaseapp.com",
-  projectId: "snhit-chat-hub",
-  storageBucket: "snhit-chat-hub.firebasestorage.app",
-  messagingSenderId: "241439945461",
-  appId: "1:241439945461:web:95258c72967e4756dd8bbc"
-};
-
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-
-/* Signup */
-window.signup = function(email, password){
-  createUserWithEmailAndPassword(auth, email, password)
-  .then(() => alert("Account Created"))
-  .catch(err => alert(err.message));
-}
-
-/* Login */
-window.login = function(email, password){
-  signInWithEmailAndPassword(auth, email, password)
-  .then(() => alert("Login Success"))
-  .catch(err => alert("Wrong Email/Password"));
-}
-
-/* Auto login */
-onAuthStateChanged(auth, (user) => {
-  if (user) {
-    document.getElementById("loginPage").style.display = "none";
-    document.getElementById("app").style.display = "block";
-  } else {
-    document.getElementById("loginPage").style.display = "block";
-    document.getElementById("app").style.display = "none";
-  }
-});
-</script>
 </body>
 </html>
