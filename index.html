@@ -1,276 +1,283 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SNHIT Chat Hub</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SNHIT Chat Hub</title>
 
-  <style>
-    *{
-      margin:0;
-      padding:0;
-      box-sizing:border-box;
-      font-family:Arial,sans-serif;
-    }
+<style>
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:Arial,sans-serif;
+}
 
-    body{
-      background:#111;
-      color:#fff;
-      display:flex;
-      justify-content:center;
-      align-items:center;
-      min-height:100vh;
-      padding:15px;
-    }
+body{
+  background:#111;
+  color:#fff;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  min-height:100vh;
+  padding:15px;
+}
 
-    .chat-box{
-      width:100%;
-      max-width:500px;
-      background:#222;
-      border-radius:20px;
-      padding:20px;
-      border:1px solid #00ff88;
-      box-shadow:0 0 20px rgba(0,255,136,.2);
-    }
+.chat-box{
+  width:100%;
+  max-width:500px;
+  background:#222;
+  border-radius:20px;
+  padding:20px;
+  border:1px solid #00ff88;
+  box-shadow:0 0 20px rgba(0,255,136,.2);
+}
 
-    h1,h2{
-      text-align:center;
-      color:#00ff88;
-      margin-bottom:20px;
-    }
+h1,h2{
+  text-align:center;
+  color:#00ff88;
+  margin-bottom:20px;
+}
 
-    #messages{
-      height:350px;
-      overflow-y:auto;
-      background:#111;
-      padding:15px;
-      border-radius:15px;
-      margin-bottom:15px;
-    }
+#messages{
+  height:350px;
+  overflow-y:auto;
+  background:#111;
+  padding:15px;
+  border-radius:15px;
+  margin-bottom:15px;
+}
 
-    .message{
-      background:#333;
-      padding:12px;
-      border-radius:12px;
-      margin-bottom:10px;
-      word-break:break-word;
-    }
+.message{
+  background:#333;
+  padding:12px;
+  border-radius:12px;
+  margin-bottom:10px;
+  word-break:break-word;
+}
 
-    .message-header{
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      margin-bottom:5px;
-    }
+.mine{
+  background:#005f3c;
+  margin-left:auto;
+  text-align:right;
+}
 
-    .nickname{
-      color:#00ff88;
-      font-weight:bold;
-    }
+.message-header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:5px;
+}
 
-    .delete-btn{
-      background:none;
-      border:none;
-      color:#ff4d4d;
-      cursor:pointer;
-      font-size:16px;
-      padding:0;
-    }
+.nickname{
+  color:#00ff88;
+  font-weight:bold;
+}
 
-    .input-area{
-      display:flex;
-      gap:10px;
-    }
+.delete-btn, .edit-btn{
+  background:none;
+  border:none;
+  cursor:pointer;
+  font-size:14px;
+  margin-left:5px;
+}
 
-    input{
-      flex:1;
-      padding:12px;
-      border:none;
-      border-radius:20px;
-      outline:none;
-    }
+.delete-btn{ color:#ff4d4d; }
+.edit-btn{ color:#ffd166; }
 
-    button{
-      padding:12px 20px;
-      border:none;
-      border-radius:20px;
-      background:#00ff88;
-      color:#000;
-      font-weight:bold;
-      cursor:pointer;
-    }
+.input-area{
+  display:flex;
+  gap:10px;
+}
 
-    #nicknameBox{
-      display:block;
-    }
+input{
+  flex:1;
+  padding:12px;
+  border:none;
+  border-radius:20px;
+  outline:none;
+}
 
-    #chatBox{
-      display:none;
-    }
-  </style>
+button{
+  padding:12px 20px;
+  border:none;
+  border-radius:20px;
+  background:#00ff88;
+  color:#000;
+  font-weight:bold;
+  cursor:pointer;
+}
+
+button:disabled{
+  opacity:0.5;
+  cursor:not-allowed;
+}
+
+#chatBox{ display:none; }
+</style>
 </head>
 
 <body>
 
-  <div id="nicknameBox" class="chat-box">
+<div id="nicknameBox" class="chat-box">
+  <h2>👋 Welcome to SNHIT Chat Hub</h2>
 
-    <h2>👋 Welcome to SNHIT Chat Hub</h2>
+  <input id="nicknameInput" placeholder="Enter your nickname" maxlength="20">
 
-    <input
-      id="nicknameInput"
-      placeholder="Enter your nickname"
-      maxlength="20"
-    >
+  <button id="joinBtn" style="margin-top:15px;width:100%;">
+    Join Chat
+  </button>
+</div>
 
-    <button id="joinBtn" style="margin-top:15px;width:100%;">
-      Join Chat
-    </button>
+<div id="chatBox" class="chat-box">
 
+  <h1>💬 SNHIT Chat Hub</h1>
+
+  <div id="messages"></div>
+
+  <div class="input-area">
+    <input id="messageInput" placeholder="Type a message...">
+    <button id="sendBtn" disabled>Send</button>
   </div>
 
-  <div id="chatBox" class="chat-box">
+</div>
 
-    <h1>💬 SNHIT Chat Hub</h1>
+<script type="module">
 
-    <div id="messages"></div>
+import { initializeApp } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-app.js";
+import {
+  getFirestore,
+  collection,
+  addDoc,
+  query,
+  orderBy,
+  onSnapshot,
+  serverTimestamp,
+  deleteDoc,
+  doc,
+  updateDoc
+} from "https://www.gstatic.com/firebasejs/11.9.1/firebase-firestore.js";
 
-    <div class="input-area">
-      <input
-        id="messageInput"
-        placeholder="Type a message..."
-      >
+const firebaseConfig = {
+  apiKey: "AIzaSyAGwaIUPulsO721G-3yIDnLzYaKgQpYybY",
+  authDomain: "snhit-chat-hub.firebaseapp.com",
+  projectId: "snhit-chat-hub",
+  storageBucket: "snhit-chat-hub.firebasestorage.app",
+  messagingSenderId: "241439945461",
+  appId: "1:241439945461:web:95258c72967e4756dd8bbc"
+};
 
-      <button id="sendBtn">Send</button>
-    </div>
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
 
-  </div>
+const nicknameBox = document.getElementById("nicknameBox");
+const chatBox = document.getElementById("chatBox");
 
-  <script type="module">
+const nicknameInput = document.getElementById("nicknameInput");
+const joinBtn = document.getElementById("joinBtn");
 
-    import { initializeApp }
-    from "https://www.gstatic.com/firebasejs/11.9.1/firebase-app.js";
+const messages = document.getElementById("messages");
+const input = document.getElementById("messageInput");
+const sendBtn = document.getElementById("sendBtn");
 
-    import {
-      getFirestore,
-      collection,
-      addDoc,
-      query,
-      orderBy,
-      onSnapshot,
-      serverTimestamp,
-      deleteDoc,
-      doc
-    }
-    from "https://www.gstatic.com/firebasejs/11.9.1/firebase-firestore.js";
+let nickname = localStorage.getItem("nickname");
 
-    const firebaseConfig = {
-      apiKey: "AIzaSyAGwaIUPulsO721G-3yIDnLzYaKgQpYybY",
-      authDomain: "snhit-chat-hub.firebaseapp.com",
-      projectId: "snhit-chat-hub",
-      storageBucket: "snhit-chat-hub.firebasestorage.app",
-      messagingSenderId: "241439945461",
-      appId: "1:241439945461:web:95258c72967e4756dd8bbc"
-    };
+if(nickname){
+  nicknameBox.style.display = "none";
+  chatBox.style.display = "block";
+}
 
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
+joinBtn.onclick = () => {
+  const value = nicknameInput.value.trim();
+  if(!value) return alert("Enter nickname");
 
-    const nicknameBox = document.getElementById("nicknameBox");
-    const chatBox = document.getElementById("chatBox");
+  nickname = value;
+  localStorage.setItem("nickname", nickname);
 
-    const nicknameInput = document.getElementById("nicknameInput");
-    const joinBtn = document.getElementById("joinBtn");
+  nicknameBox.style.display = "none";
+  chatBox.style.display = "block";
+};
 
-    const messages = document.getElementById("messages");
-    const input = document.getElementById("messageInput");
-    const sendBtn = document.getElementById("sendBtn");
+input.addEventListener("input", () => {
+  sendBtn.disabled = input.value.trim() === "";
+});
 
-    let nickname = localStorage.getItem("nickname");
+input.addEventListener("keydown", (e) => {
+  if(e.key === "Enter") sendBtn.click();
+});
 
-    if(nickname){
-      nicknameBox.style.display = "none";
-      chatBox.style.display = "block";
-    }
+sendBtn.onclick = async () => {
+  if(!input.value.trim()) return;
 
-    joinBtn.addEventListener("click", () => {
+  await addDoc(collection(db, "messages"), {
+    nickname,
+    text: input.value,
+    createdAt: serverTimestamp()
+  });
 
-      const value = nicknameInput.value.trim();
+  input.value = "";
+  sendBtn.disabled = true;
+};
 
-      if(!value){
-        alert("Please enter a nickname");
-        return;
-      }
+const q = query(collection(db, "messages"), orderBy("createdAt"));
 
-      nickname = value;
+onSnapshot(q, (snapshot) => {
+  messages.innerHTML = "";
 
-      localStorage.setItem("nickname", nickname);
+  snapshot.forEach((item) => {
+    const data = item.data();
+    const isMine = data.nickname === nickname;
 
-      nicknameBox.style.display = "none";
-      chatBox.style.display = "block";
-    });
+    const div = document.createElement("div");
+    div.className = "message " + (isMine ? "mine" : "");
 
-    sendBtn.addEventListener("click", async () => {
+    const time = data.createdAt?.seconds
+      ? new Date(data.createdAt.seconds * 1000).toLocaleTimeString()
+      : "";
 
-      if(input.value.trim() === "") return;
+    div.innerHTML = `
+      <div class="message-header">
+        <span class="nickname">${data.nickname}</span>
 
-      await addDoc(collection(db, "messages"), {
-        nickname: nickname,
-        text: input.value,
-        createdAt: serverTimestamp()
-      });
-
-      input.value = "";
-    });
-
-    const q = query(
-      collection(db, "messages"),
-      orderBy("createdAt")
-    );
-
-    onSnapshot(q, (snapshot) => {
-
-      messages.innerHTML = "";
-
-      snapshot.forEach((item) => {
-
-        const data = item.data();
-
-        const div = document.createElement("div");
-        div.className = "message";
-
-        div.innerHTML = `
-          <div class="message-header">
-            <span class="nickname">${data.nickname}</span>
-
-            ${
-              data.nickname === nickname
-              ? `<button class="delete-btn"
-                   data-id="${item.id}">🗑️</button>`
-              : ""
-            }
+        ${isMine ? `
+          <div>
+            <button class="edit-btn" data-id="${item.id}">✏️</button>
+            <button class="delete-btn" data-id="${item.id}">🗑️</button>
           </div>
+        ` : ""}
+      </div>
 
-          <div>${data.text}</div>
-        `;
+      <div>${data.text}</div>
+      <small style="opacity:0.6">${time}</small>
+    `;
 
-        messages.appendChild(div);
+    messages.appendChild(div);
+  });
+
+  // delete
+  document.querySelectorAll(".delete-btn").forEach(btn => {
+    btn.onclick = async () => {
+      if(!confirm("Delete message?")) return;
+      await deleteDoc(doc(db, "messages", btn.dataset.id));
+    };
+  });
+
+  // edit
+  document.querySelectorAll(".edit-btn").forEach(btn => {
+    btn.onclick = async () => {
+      const newText = prompt("Edit message:");
+      if(!newText) return;
+
+      await updateDoc(doc(db, "messages", btn.dataset.id), {
+        text: newText
       });
+    };
+  });
 
-      document.querySelectorAll(".delete-btn")
-      .forEach(btn => {
+  messages.scrollTop = messages.scrollHeight;
+});
 
-        btn.onclick = async () => {
-
-          const id = btn.getAttribute("data-id");
-
-          await deleteDoc(doc(db, "messages", id));
-        };
-      });
-
-      messages.scrollTop = messages.scrollHeight;
-    });
-
-  </script>
+</script>
 
 </body>
 </html>
