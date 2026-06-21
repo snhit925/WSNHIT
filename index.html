@@ -1,99 +1,98 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>SNHIT Ludo</title>
-
-<style>
-body{
-margin:0;
-height:100vh;
-display:flex;
-justify-content:center;
-align-items:center;
-background:linear-gradient(135deg,#0f172a,#1e293b);
-font-family:Arial;
-color:white;
-}
-
-.card{
-width:380px;
-padding:30px;
-background:#111827;
-border-radius:25px;
-text-align:center;
-box-shadow:0 0 30px rgba(0,255,136,.3);
-}
-
-h1{
-color:#00ff88;
-font-size:42px;
-}
-
-button{
-width:100%;
-padding:15px;
-margin:10px 0;
-border:none;
-border-radius:15px;
-font-size:18px;
-cursor:pointer;
-font-weight:bold;
-}
-
-.play{background:#00ff88;}
-.room{background:#3b82f6;color:white;}
-.join{background:#f59e0b;color:white;}
-
-#roomCode{
-display:none;
-margin-top:15px;
-padding:10px;
-background:#222;
-border-radius:10px;
-}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Firebase Online Ludo</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; background-color: #f4f4f4; }
+        #game-box { margin: 50px auto; padding: 20px; background: white; max-width: 400px; border-radius: 10px; box-shadow: 0px 0px 15px rgba(0,0,0,0.2); }
+        .btn { padding: 10px 20px; font-size: 16px; background-color: #007bff; color: white; border: none; border-radius: 5px; cursor: pointer; margin: 5px; }
+        .dice-btn { background-color: #28a745; font-size: 18px; }
+        #dice-result { font-size: 60px; margin: 20px; }
+        #status { color: #555; font-weight: bold; }
+    </style>
 </head>
-
 <body>
 
-<div class="card">
-<h1>🎲 SNHIT Ludo</h1>
+    <div id="game-box">
+        <h2>Firebase Mini Ludo 🎲</h2>
+        
+        <div>
+            <input type="text" id="roomInput" placeholder="Enter Room ID (e.g., room123)" style="padding: 8px; width: 60%;">
+            <button class="btn" onclick="joinRoom()">Join Room</button>
+        </div>
+        
+        <p id="status">Status: Not connected to any room</p>
 
-<p>Online Multiplayer Ludo</p>
+        <div id="dice-result">🎲</div>
+        <button class="btn dice-btn" onclick="rollDice()">Roll Dice</button>
+        
+        <p id="log">Waiting for players...</p>
+    </div>
 
-<button class="play" onclick="play()">Play Offline</button>
-<button class="room" onclick="createRoom()">Create Room</button>
-<button class="join" onclick="joinRoom()">Join Room</button>
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
-<div id="roomCode"></div>
+        // 🔥 TODO: Apne Firebase Console se yeh Config copy karke yahan paste karein
+        const firebaseConfig = {
+            apiKey: "YOUR_API_KEY",
+            authDomain: "YOUR_AUTH_DOMAIN",
+            databaseURL: "YOUR_DATABASE_URL",
+            projectId: "YOUR_PROJECT_ID",
+            storageBucket: "YOUR_STORAGE_BUCKET",
+            messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+            appId: "YOUR_APP_ID"
+        };
 
-</div>
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const database = getDatabase(app);
+        
+        let currentRoom = "";
+        const diceEmojis = ["", "⚀", "⚁", "⚂", "⚃", "⚄", "⚅"];
 
-<script>
+        // Room Join karne ka function (Global scope me dalne ke liye window use kiya hai)
+        window.joinRoom = function() {
+            const roomId = document.getElementById('roomInput').value.trim();
+            if(!roomId) {
+                alert("Please enter a valid Room ID");
+                return;
+            }
+            
+            currentRoom = roomId;
+            document.getElementById('status').innerText = `Status: Connected to Room [${roomId}]`;
 
-function play(){
-alert("Offline Mode Coming Soon");
-}
+            // Firebase se Real-time data listen (sunna) shuru karein
+            const roomRef = ref(database, 'rooms/' + currentRoom);
+            onValue(roomRef, (snapshot) => {
+                const data = snapshot.val();
+                if (data && data.lastRoll) {
+                    document.getElementById('dice-result').innerText = diceEmojis[data.lastRoll];
+                    document.getElementById('log').innerText = `Someone rolled a ${data.lastRoll}!`;
+                }
+            });
+        };
 
-function createRoom(){
-const code=Math.floor(100000+Math.random()*900000);
+        // Dice Roll karke Firebase me data update karne ka function
+        window.rollDice = function() {
+            if(!currentRoom) {
+                alert("Pehle 'Join Room' par click karke room join karo!");
+                return;
+            }
 
-document.getElementById("roomCode").style.display="block";
-document.getElementById("roomCode").innerHTML=
-"Room Code: <b>"+code+"</b>";
-}
+            const randomDice = Math.floor(Math.random() * 6) + 1;
 
-function joinRoom(){
-let room=prompt("Enter Room Code");
-
-if(room){
-alert("Joining Room: "+room);
-}
-}
-
-</script>
-
+            // Firebase Realtime Database mein data save karein
+            set(ref(database, 'rooms/' + currentRoom), {
+                lastRoll: randomDice
+            }).then(() => {
+                console.log("Data synced with Firebase!");
+            }).catch((error) => {
+                console.error("Firebase Error: ", error);
+            });
+        };
+    </script>
 </body>
 </html>
