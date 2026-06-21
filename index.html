@@ -1,214 +1,1283 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SNHIT Chat Hub</title>
+    <!-- ========== Meta Tags ========== -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+   <!--  <meta property="og:title" content="Player Of Code" /> -->
+    <meta property="og:title" content="How to make Ludo using HTML and CSS">
+    <meta property="og:url" content="https://playerofcode.in/home/article/44/how-to-make-ludo-using-html-and-css">
+    <meta property="og:type" content="website"/>
+    <meta property="og:description" content="Bring the fun of Ludo online! This guide teaches you how to create a basic Ludo game using HTML and CSS. Craft a playable board and get started with building your own online version of this classic game" />
+    <meta name="keywords" content="ludo game html css, create ludo board html css, diy ludo board html css, build ludo game online, simple ludo game code">
+    <meta name="description" content="Bring the fun of Ludo online! This guide teaches you how to create a basic Ludo game using HTML and CSS. Craft a playable board and get started with building your own online version of this classic game">
+     <!-- <meta property="og:image" content="https://playerofcode.in/assets/img/logo.jpg" /> -->
+     <meta property="og:image" content="https://playerofcode.in/upload/Screenshot_2023-09-03_at_2_58_58_PM.png">
+     <meta property="og:site_name" content="Player Of Code">
+     <base href="https://playerofcode.in/">
+    <!-- ========== Page Title ========== -->
+    <title>How to make Ludo using HTML and CSS</title>
 
-<style>
-*{
-  margin:0;
-  padding:0;
-  box-sizing:border-box;
-  font-family:Arial,sans-serif;
-}
+    <!-- ========== Favicon Icon ========== -->
+    <link rel="shortcut icon" href="assets/img/playerofcode.png" type="image/x-icon">
 
-body{
-  background:#111;
-  color:#fff;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  min-height:100vh;
-  padding:15px;
-}
+    <!-- ========== Start Stylesheet ========== -->
+    <link href="assets/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="assets/css/font-awesome.min.css" rel="stylesheet" />
+    <link href="assets/css/flaticon-set.css" rel="stylesheet" />
+    <link href="assets/css/elegant-icons.css" rel="stylesheet" />
+    <link href="assets/css/magnific-popup.css" rel="stylesheet" />
+    <link href="assets/css/owl.carousel.min.css" rel="stylesheet" />
+    <link href="assets/css/owl.theme.default.min.css" rel="stylesheet" />
+    <link href="assets/css/animate.css" rel="stylesheet" />
+    <link href="assets/css/bootsnav.css" rel="stylesheet" />
+    <link href="assets/css/style.css" rel="stylesheet">
+    <link href="assets/css/responsive.css" rel="stylesheet" />
+    <!-- ========== End Stylesheet ========== -->
+    <link href="../../../fonts.googleapis.com/cssd2d5.css?family=Open+Sans" rel="stylesheet">
+    <link href="../../../fonts.googleapis.com/css6e13.css?family=Poppins:400,500,600,700,800" rel="stylesheet">
+     <style>
+     .social_link{
+        height: 50px;
+        width: 100%;
+        margin-bottom: 10px;
+     }
+     .social_link ul{
+        margin: 0;
+        padding: 0;
+     }
+     .social_link ul li{
+        height: 50px;
+        width: 50px;
+        float: left;
+        line-height: 50px;
+        text-align: center;
+        margin-right: 10px;
+        border-radius: 50%;
+        box-shadow: 0 5px 10px rgba(0, 0, 0, 0.5);\
+        transition: 0.3s;
+        font-size: 22px;
+     }
+     .social_link ul li:hover{
+        box-shadow: 0px 5px 10px rgba(0, 255, 0, 0.4);
+        transition: 0.3s; 
+        cursor: pointer;  
+     }
+     .fb{
+        background: #0575E6;  /* fallback for old browsers */
+background: -webkit-linear-gradient(to right, #021B79, #0575E6);  /* Chrome 10-25, Safari 5.1-6 */
+background: linear-gradient(to right, #021B79, #0575E6); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+     }
+     .insta{
+        background: #833ab4;  /* fallback for old browsers */
+background: -webkit-linear-gradient(to right, #fcb045, #fd1d1d, #833ab4);  /* Chrome 10-25, Safari 5.1-6 */
+background: linear-gradient(to right, #fcb045, #fd1d1d, #833ab4); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
 
-.chat-box{
-  width:100%;
-  max-width:500px;
-  background:#222;
-  border-radius:20px;
-  padding:20px;
-  border:1px solid #00ff88;
-}
+     }
+     .twitter{
+        background: #1da1f2;
+     }
+     .linkedin{
+        background: #396afc;  /* fallback for old browsers */
+background: -webkit-linear-gradient(to right, #2948ff, #396afc);  /* Chrome 10-25, Safari 5.1-6 */
+background: linear-gradient(to right, #2948ff, #396afc); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
 
-h1,h2{
-  text-align:center;
-  color:#00ff88;
-  margin-bottom:20px;
-}
-
-#messages{
-  height:350px;
-  overflow-y:auto;
-  background:#111;
-  padding:15px;
-  border-radius:15px;
-  margin-bottom:15px;
-}
-
-.message{
-  background:#333;
-  padding:12px;
-  border-radius:12px;
-  margin-bottom:10px;
-}
-
-.mine{
-  background:#005f3c;
-  margin-left:auto;
-  text-align:right;
-}
-
-.input-area{
-  display:flex;
-  gap:10px;
-}
-
-input{
-  flex:1;
-  padding:12px;
-  border:none;
-  border-radius:20px;
-  outline:none;
-}
-
-button{
-  padding:12px 20px;
-  border:none;
-  border-radius:20px;
-  background:#00ff88;
-  color:#000;
-  font-weight:bold;
-  cursor:pointer;
-}
-
-#chatBox{ display:none; }
-</style>
+     }
+     .github{
+        background: #171515;
+     }
+     .youtube{
+        background: #e52d27;  /* fallback for old browsers */
+background: -webkit-linear-gradient(to right, #b31217, #e52d27);  /* Chrome 10-25, Safari 5.1-6 */
+background: linear-gradient(to right, #b31217, #e52d27); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+     }
+     
+ </style>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2272457489967447"
+     crossorigin="anonymous"></script>
+     <script type='text/javascript' src='https://platform-api.sharethis.com/js/sharethis.js#property=62d7a8e262cd13001ef5a5f6&product=sop' async='async'></script>
 </head>
 
 <body>
+   <!--  <div class="se-pre-con"></div> -->
+    <div class="top-bar-area address-two-lines bg-dark text-light">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-8 address-info">
+                    <div class="info box">
+                        <ul>
+                            <li>
+                                <span><i class="fas fa-map"></i> Address</span>Lucknow,UP, India
+                            </li>
+                            <li>
+                                <span><i class="fas fa-envelope-open"></i> Email</span>playerofcode@gmail.com
+                            </li>
+                            <li>
+                                <span><i class="fas fa-phone"></i> Contact</span>+91 7054874357
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="user-login text-right col-md-4">
+                    <!--<a class="popup-with-form" href="#register-form">
+                        <i class="fas fa-edit"></i> Register
+                    </a>
+                    <a  class="popup-with-form" href="#login-form">
+                        <i class="fas fa-user"></i> Login
+                    </a>-->
+                </div>
+            </div>
+        </div>
+    </div>
+    <header id="home">
 
-<!-- 🔥 LOGIN SCREEN -->
-<div id="loginPage" class="chat-box">
-  <h2>Login / Signup</h2>
+        <!-- Start Navigation -->
+        <nav class="navbar navbar-default navbar-sticky bootsnav">
 
-  <input id="email" placeholder="Email">
-  <input id="password" placeholder="Password">
+            <!-- Start Top Search -->
+            <div class="container">
+                <div class="row">
+                    <div class="top-search">
+                        <div class="input-group">
+                            <form action="https://playerofcode.in/home/blog" method="get">
+                                <input type="text" name="search" class="form-control" placeholder="Search blogs...">
+                                <button type="submit">
+                                    <i class="fas fa-search"></i>
+                                </button>  
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- End Top Search -->
 
-  <button onclick="signup(email.value,password.value)">Sign Up</button>
-  <button onclick="login(email.value,password.value)">Login</button>
+            <div class="container">
+
+                <!-- Start Atribute Navigation -->
+                <div class="attr-nav">
+                    <ul>
+                        <li class="search"><a href="#"><i class="fa fa-search"></i></a></li>
+                    </ul>
+                </div>        
+                <!-- End Atribute Navigation -->
+
+                <!-- Start Header Navigation -->
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-menu">
+                        <i class="fa fa-bars"></i>
+                    </button>
+                    <a class="navbar-brand" href="https://playerofcode.in/">
+                        <img src="assets/img/logo.jpg" class="logo" alt="Player Of Code" style="height:50px;">
+                    </a>
+                </div>
+                <!-- End Header Navigation -->
+
+                <!-- Collect the nav links, forms, and other content for toggling -->
+                <div class="collapse navbar-collapse" id="navbar-menu">
+                    <ul class="nav navbar-nav navbar-right" data-in="#" data-out="#">
+                        <li>
+                            <a href="https://playerofcode.in/">Home</a>
+                        </li>
+                        <li>
+                            <a href="https://playerofcode.in/about-us">About</a>
+                        </li>
+                        <li>
+                            <a href="https://playerofcode.in/gallery">Gallery</a>
+                        </li>
+                        <li>
+                            <a href="https://playerofcode.in/our-video">Our Video</a>
+                        </li>
+                        <li>
+                            <a href="https://playerofcode.in/our-blog">Blog</a>
+                        </li>
+                        <li>
+                            <a href="https://playerofcode.in/slug-generator">Slug Generator</a>
+                        </li>
+                        <li>
+                            <a href="https://playerofcode.in/affiliate-partner">Affiliate Partner</a>
+                        </li>
+                        <li>
+                            <a href="https://playerofcode.in/contact-us">contact</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+        </nav>
+        <!-- End Navigation -->
+
+    </header>
+    <!-- End Header -->
+
+    <!-- Start Login Form 
+    ============================================= -->
+    <form action="#" id="login-form" class="mfp-hide white-popup-block">
+        <div class="col-md-4 login-social">
+            <h4>Login with social</h4>
+            <ul>
+                <li class="facebook">
+                    <a href="#">
+                        <i class="fab fa-facebook-f"></i>
+                    </a>
+                </li>
+                <li class="twitter">
+                    <a href="#">
+                        <i class="fab fa-twitter"></i>
+                    </a>
+                </li>
+                <li class="linkedin">
+                    <a href="#">
+                        <i class="fab fa-linkedin-in"></i>
+                    </a>
+                </li>
+            </ul>
+        </div>
+        <div class="col-md-8 login-custom">
+            <h4>login to your registered account!</h4>
+            <div class="col-md-12">
+                <div class="row">
+                    <div class="form-group">
+                        <input class="form-control" placeholder="Email*" type="email">
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-12">
+                <div class="row">
+                    <div class="form-group">
+                        <input class="form-control" placeholder="Password*" type="text">
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-12">
+                <div class="row">
+                    <label for="login-remember"><input type="checkbox" id="login-remember">Remember Me</label>
+                    <a title="Lost Password" href="#" class="lost-pass-link">Lost your password?</a>
+                </div>
+            </div>
+            <div class="col-md-12">
+                <div class="row">
+                    <button type="submit">
+                        Login
+                    </button>
+                </div>
+            </div>
+            <p class="link-bottom">Not a member yet? <a href="#">Register now</a></p>
+        </div>
+    </form>
+    <!-- End Login Form -->
+
+    <!-- Start Register Form 
+    ============================================= -->
+    <form action="#" id="register-form" class="mfp-hide white-popup-block">
+        <div class="col-md-4 login-social">
+            <h4>Register with social</h4>
+            <ul>
+                <li class="facebook">
+                    <a href="#">
+                        <i class="fab fa-facebook-f"></i>
+                    </a>
+                </li>
+                <li class="twitter">
+                    <a href="#">
+                        <i class="fab fa-twitter"></i>
+                    </a>
+                </li>
+                <li class="linkedin">
+                    <a href="#">
+                        <i class="fab fa-linkedin-in"></i>
+                    </a>
+                </li>
+            </ul>
+        </div>
+        <div class="col-md-8 login-custom">
+            <h4>Register a new account</h4>
+            <div class="col-md-12">
+                <div class="row">
+                    <div class="form-group">
+                        <input class="form-control" placeholder="Email*" type="email">
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-12">
+                <div class="row">
+                    <div class="form-group">
+                        <input class="form-control" placeholder="Username*" type="text">
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-12">
+                <div class="row">
+                    <div class="form-group">
+                        <input class="form-control" placeholder="Password*" type="text">
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-12">
+                <div class="row">
+                    <div class="form-group">
+                        <input class="form-control" placeholder="Repeat Password*" type="text">
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-12">
+                <div class="row">
+                    <button type="submit">
+                        Sign up
+                    </button>
+                </div>
+            </div>
+            <p class="link-bottom">Are you a member? <a href="#">Login now</a></p>
+        </div>
+    </form>
+    <!-- End Register Form -->
+<div class="container-fluid" style="padding: 0;">
+    <div class="row">
+        <div class="col-md-12" style="position: relative;overflow: hidden;">
+            <img src="assets/img/yt_resize.jpg" style=" transform: scale(1.2);overflow: hidden;">
+        </div>
+    </div>
 </div>
+    <div class="blog-area full-blog right-sidebar full-blog default-padding">
+        <div class="container">
+            <div class="row">
+                <div class="blog-items">
+                    <div class="blog-content col-md-8">
+                        <!-- Single Item -->
+                                                <div class="single-item">
+                            <div class="item">
+                                <div class="thumb">
+                                    <a href="https://playerofcode.in/home/blog_detail/44"><img src="https://playerofcode.in/upload/Screenshot_2023-09-03_at_2_58_58_PM.png" alt="How to make Ludo using HTML and CSS" title="How to make Ludo using HTML and CSS"></a>
+                                    <div class="date">
+                                        <h4><span>03</span>
+                                            Sep, 2023</h4>
+                                    </div>
+                                </div>
+                                <div class="info">
+                                    <h3>
+                                        <a href="https://playerofcode.in/home/blog_detail/44">How to make Ludo using HTML and CSS</a>
+                                    </h3>
+                                    <style>
+                                    .justify p
+                                    {
+                                        text-align:justify!important;
+                                    }
+                                    </style>
+                                    <div class="text-justify justify">
+                                       <p>Ludo is one of the most popular board games enjoyed by people of all ages. Did you know you can create your own Ludo game using just <strong>HTML and CSS</strong>?</p>
 
-<!-- 🔥 CHAT APP -->
-<div id="app" class="chat-box" style="display:none;">
-  <h1>💬 SNHIT Chat Hub</h1>
+<p>In this tutorial, we will show you how to build a <strong>fully styled Ludo board</strong> from scratch. No advanced JavaScript is required&mdash;just basic knowledge of <strong>HTML elements, CSS classes, and styling techniques</strong>. By the end of this tutorial, you will have your very own Ludo game board ready to use!</p>
 
-  <div id="messages"></div>
+<h2>What You Will Learn</h2>
 
-  <div class="input-area">
-    <input id="messageInput" placeholder="Type message...">
-    <button onclick="sendMessage()">Send</button>
-  </div>
+<ul>
+	<li>
+	<p>How to structure a Ludo board using HTML</p>
+	</li>
+	<li>
+	<p>How to style the board using CSS (colors, grid layout, and tokens)</p>
+	</li>
+	<li>
+	<p>How to position Ludo tokens for each player</p>
+	</li>
+	<li>
+	<p>How to make the board visually appealing</p>
+	</li>
+</ul>
 
-  <button onclick="logout()" style="margin-top:10px;">Logout</button>
-</div>
+<h2>Requirements</h2>
 
-<!-- 🔥 FIREBASE SCRIPT (ONLY ONE CLEAN VERSION) -->
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import {
-  getAuth,
-  createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
-  signOut,
-  onAuthStateChanged
-} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+<p>Before we start, make sure you have the following:</p>
 
-import {
-  getFirestore,
-  collection,
-  addDoc,
-  query,
-  orderBy,
-  onSnapshot,
-  serverTimestamp
-} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+<ol>
+	<li>
+	<p>A <strong>code editor</strong> (VSCode, Sublime Text, or any editor you prefer)</p>
+	</li>
+	<li>
+	<p>A <strong>web browser</strong> to test your Ludo game</p>
+	</li>
+	<li>
+	<p>Basic understanding of <strong>HTML and CSS classes</strong></p>
+	</li>
+</ol>
 
-/* 🔥 YOUR FIREBASE CONFIG */
-const firebaseConfig = {
-  apiKey: "AIzaSyAGwaIUPulsO721G-3yIDnLzYaKgQpYybY",
-  authDomain: "snhit-chat-hub.firebaseapp.com",
-  projectId: "snhit-chat-hub",
-  storageBucket: "snhit-chat-hub.firebasestorage.app",
-  messagingSenderId: "241439945461",
-  appId: "1:241439945461:web:95258c72967e4756dd8bbc"
-};
+<pre>
+&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+	&lt;meta charset=&quot;UTF-8&quot;&gt;
+	&lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot;&gt;
+	&lt;title&gt;Ludo&lt;/title&gt;
+	&lt;style&gt;
+		*
+		{
+			margin:0;
+			padding: 0;
+		}
+		.outer
+		{
+			height: 750px;
+			width:750px;
+			margin:0px auto;
+			border:1px solid red;
+		}
+		.box_row
+		{
+		height: 300px;
+		width:750px;
+		//background: #fc8596;
+		}
+		.box
+		{
+			height: 200px;
+			width:200px;
+			float: left;
+			//background: #ccc;
+		}
+		.v_lad
+		{
+			height: 300px;
+			width:150px;
+			//background: #ed8541;
+			float: left;
+		}
+		.circle
+		{
+			height: 50px;
+			width:50px;
+			//background: #f07485;
+			margin:25px;
+			border-radius: 50%;
+			box-sizing: border-box;
+			float: left;
+		}
+		.border_red
+		{
+			border:5px solid red;
+		}
+		.border_green
+		{
+			border:5px solid green;
+		}
+		.border_blue
+		{
+			border:5px solid blue;
+		}
+		.border_yellow
+		{
+			border:5px solid yellow;
+		}
+		.v_lad_row
+		{
+			height: 50px;
+			width:150px;
+			//background: #dd7485;
+		}
+		.v_lad_cell
+		{
+			height: 50px;
+			width:50px;
+			border:1px solid #000;
+			box-sizing: border-box;
+			float: left;
+			text-align: center;
+		}
+		.red
+		{
+			background: red;
+		}
+		.green
+		{
+			background: green;
+		}
+		.blue
+		{
+			background: blue;
+		}
+		.yellow
+		{
+			background: yellow;
+		}
+		.middle_row
+		{
+			height: 150px;
+			width:750px;
 
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const db = getFirestore(app);
+		}
+		.h_lad
+		{
+			height: 150px;
+			width:300px;
+			//background: #ff4152;
+			float: left;
+		}
+		.h_lad_row
+		{
+			height: 50px;
+			width: 300px;
+			//background: #ffc857;
+			float: left;
+		}
+		.h_lad_cell
+		{
+			height: 50px;
+			width:50px;
+			border:1px solid #000;
+			float: left;
+			box-sizing: border-box;
+			text-align: center;
+		}
+		.ludo_home
+		{
+			height: 0;
+			width: 0;
+			border-left:75px solid red;
+			border-right:75px solid yellow;
+			border-top:75px solid green;
+			border-bottom:75px solid blue;
+			float: left;	
+		}
+		.star
+		{
+			font-size: 32px;
+			text-align: center;
+		}
+	&lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+	&lt;div class=&quot;outer&quot;&gt;
+		&lt;div class=&quot;box_row&quot;&gt;
+			&lt;div class=&quot;box&quot; style=&quot;border:50px solid red;&quot;&gt;
+				&lt;div class=&quot;circle border_red&quot;&gt;&lt;/div&gt;
+				&lt;div class=&quot;circle border_red&quot;&gt;&lt;/div&gt;
+				&lt;div class=&quot;circle border_red&quot;&gt;&lt;/div&gt;
+				&lt;div class=&quot;circle border_red&quot;&gt;&lt;/div&gt;
+			&lt;/div&gt;
+			&lt;div class=&quot;v_lad&quot;&gt;
+				&lt;div class=&quot;v_lad_row&quot;&gt;
+					&lt;div class=&quot;v_lad_cell&quot;&gt;&lt;/div&gt;
+					&lt;div class=&quot;v_lad_cell&quot;&gt;&lt;/div&gt;
+					&lt;div class=&quot;v_lad_cell&quot;&gt;&lt;/div&gt;
+				&lt;/div&gt;
+				&lt;div class=&quot;v_lad_row&quot;&gt;
+					&lt;div class=&quot;v_lad_cell&quot;&gt;&lt;/div&gt;
+					&lt;div class=&quot;v_lad_cell green&quot;&gt;&lt;/div&gt;
+					&lt;div class=&quot;v_lad_cell green&quot;&gt;&lt;span class=&quot;star&quot;&gt;&amp;#9733;&lt;/span&gt;&lt;/div&gt;
+				&lt;/div&gt;
+				&lt;div class=&quot;v_lad_row&quot;&gt;
+					&lt;div class=&quot;v_lad_cell green&quot;&gt;&lt;span class=&quot;star&quot;&gt;&amp;#9733;&lt;/span&gt;&lt;/div&gt;
+					&lt;div class=&quot;v_lad_cell green&quot;&gt;&lt;/div&gt;
+					&lt;div class=&quot;v_lad_cell&quot;&gt;&lt;/div&gt;
+				&lt;/div&gt;
+				&lt;div class=&quot;v_lad_row&quot;&gt;
+					&lt;div class=&quot;v_lad_cell&quot;&gt;&lt;/div&gt;
+					&lt;div class=&quot;v_lad_cell green&quot;&gt;&lt;/div&gt;
+					&lt;div class=&quot;v_lad_cell&quot;&gt;&lt;/div&gt;
+				&lt;/div&gt;
+				&lt;div class=&quot;v_lad_row&quot;&gt;
+					&lt;div class=&quot;v_lad_cell&quot;&gt;&lt;/div&gt;
+					&lt;div class=&quot;v_lad_cell green&quot;&gt;&lt;/div&gt;
+					&lt;div class=&quot;v_lad_cell&quot;&gt;&lt;/div&gt;
+				&lt;/div&gt;
+				&lt;div class=&quot;v_lad_row&quot;&gt;
+					&lt;div class=&quot;v_lad_cell&quot;&gt;&lt;/div&gt;
+					&lt;div class=&quot;v_lad_cell green&quot;&gt;&lt;/div&gt;
+					&lt;div class=&quot;v_lad_cell&quot;&gt;&lt;/div&gt;
+				&lt;/div&gt;
+			&lt;/div&gt;
+			&lt;div class=&quot;box&quot; style=&quot;border:50px solid green;&quot;&gt;
+				&lt;div class=&quot;circle border_green&quot;&gt;&lt;/div&gt;
+				&lt;div class=&quot;circle border_green&quot;&gt;&lt;/div&gt;
+				&lt;div class=&quot;circle border_green&quot;&gt;&lt;/div&gt;
+				&lt;div class=&quot;circle border_green&quot;&gt;&lt;/div&gt;
+			&lt;/div&gt;
+		&lt;/div&gt;
+		&lt;div class=&quot;middle_row&quot;&gt;
+		&lt;div class=&quot;h_lad&quot;&gt;
+			&lt;div class=&quot;h_lad_row&quot;&gt;
+				&lt;div class=&quot;h_lad_cell&quot;&gt;&lt;/div&gt;
+				&lt;div class=&quot;h_lad_cell red&quot;&gt;&lt;span class=&quot;star&quot;&gt;&amp;#9733;&lt;/span&gt;&lt;/div&gt;
+				&lt;div class=&quot;h_lad_cell&quot;&gt;&lt;/div&gt;
+				&lt;div class=&quot;h_lad_cell&quot;&gt;&lt;/div&gt;
+				&lt;div class=&quot;h_lad_cell&quot;&gt;&lt;/div&gt;
+				&lt;div class=&quot;h_lad_cell&quot;&gt;&lt;/div&gt;
+			&lt;/div&gt;
+			&lt;div class=&quot;h_lad_row&quot;&gt;
+				&lt;div class=&quot;h_lad_cell&quot;&gt;&lt;/div&gt;
+				&lt;div class=&quot;h_lad_cell red&quot;&gt;&lt;/div&gt;
+				&lt;div class=&quot;h_lad_cell red&quot;&gt;&lt;/div&gt;
+				&lt;div class=&quot;h_lad_cell red&quot;&gt;&lt;/div&gt;
+				&lt;div class=&quot;h_lad_cell red&quot;&gt;&lt;/div&gt;
+				&lt;div class=&quot;h_lad_cell red&quot;&gt;&lt;/div&gt;
+			&lt;/div&gt;
+			&lt;div class=&quot;h_lad_row&quot;&gt;
+				&lt;div class=&quot;h_lad_cell&quot;&gt;&lt;/div&gt;
+				&lt;div class=&quot;h_lad_cell&quot;&gt;&lt;/div&gt;
+				&lt;div class=&quot;h_lad_cell red&quot;&gt;&lt;span class=&quot;star&quot;&gt;&amp;#9733;&lt;/span&gt;&lt;/div&gt;
+				&lt;div class=&quot;h_lad_cell&quot;&gt;&lt;/div&gt;
+				&lt;div class=&quot;h_lad_cell&quot;&gt;&lt;/div&gt;
+				&lt;div class=&quot;h_lad_cell&quot;&gt;&lt;/div&gt;
+			&lt;/div&gt;
+			&lt;/div&gt;
+			&lt;div class=&quot;ludo_home&quot;&gt;&lt;/div&gt;
+			&lt;div class=&quot;h_lad&quot;&gt;
+				&lt;div class=&quot;h_lad_row&quot;&gt;
+				&lt;div class=&quot;h_lad_cell&quot;&gt;&lt;/div&gt;
+				&lt;div class=&quot;h_lad_cell&quot;&gt;&lt;/div&gt;
+				&lt;div class=&quot;h_lad_cell&quot;&gt;&lt;/div&gt;
+				&lt;div class=&quot;h_lad_cell yellow&quot;&gt;&lt;span class=&quot;star&quot;&gt;&amp;#9733;&lt;/span&gt;&lt;/div&gt;
+				&lt;div class=&quot;h_lad_cell&quot;&gt;&lt;/div&gt;
+				&lt;div class=&quot;h_lad_cell&quot;&gt;&lt;/div&gt;
+			&lt;/div&gt;
+			&lt;div class=&quot;h_lad_row&quot;&gt;
+				&lt;div class=&quot;h_lad_cell yellow&quot;&gt;&lt;/div&gt;
+				&lt;div class=&quot;h_lad_cell yellow&quot;&gt;&lt;/div&gt;
+				&lt;div class=&quot;h_lad_cell yellow&quot;&gt;&lt;/div&gt;
+				&lt;div class=&quot;h_lad_cell yellow&quot;&gt;&lt;/div&gt;
+				&lt;div class=&quot;h_lad_cell yellow&quot;&gt;&lt;/div&gt;
+				&lt;div class=&quot;h_lad_cell &quot;&gt;&lt;/div&gt;
+			&lt;/div&gt;
+			&lt;div class=&quot;h_lad_row&quot;&gt;
+				&lt;div class=&quot;h_lad_cell&quot;&gt;&lt;/div&gt;
+				&lt;div class=&quot;h_lad_cell&quot;&gt;&lt;/div&gt;
+				&lt;div class=&quot;h_lad_cell&quot;&gt;&lt;/div&gt;
+				&lt;div class=&quot;h_lad_cell&quot;&gt;&lt;/div&gt;
+				&lt;div class=&quot;h_lad_cell yellow&quot;&gt;&lt;span class=&quot;star&quot;&gt;&amp;#9733;&lt;/span&gt;&lt;/div&gt;
+				&lt;div class=&quot;h_lad_cell&quot;&gt;&lt;/div&gt;
+			&lt;/div&gt;
+			&lt;/div&gt;
+			
+		&lt;/div&gt;
+		&lt;div class=&quot;box_row&quot;&gt;
+			&lt;div class=&quot;box&quot; style=&quot;border:50px solid blue;&quot;&gt;
+				&lt;div class=&quot;circle border_blue&quot;&gt;&lt;/div&gt;
+				&lt;div class=&quot;circle border_blue&quot;&gt;&lt;/div&gt;
+				&lt;div class=&quot;circle border_blue&quot;&gt;&lt;/div&gt;
+				&lt;div class=&quot;circle border_blue&quot;&gt;&lt;/div&gt;
+			&lt;/div&gt;
+			&lt;div class=&quot;v_lad&quot;&gt;
+				&lt;div class=&quot;v_lad_row&quot;&gt;
+					&lt;div class=&quot;v_lad_cell&quot;&gt;&lt;/div&gt;
+					&lt;div class=&quot;v_lad_cell blue&quot;&gt;&lt;/div&gt;
+					&lt;div class=&quot;v_lad_cell&quot;&gt;&lt;/div&gt;
+				&lt;/div&gt;
+				&lt;div class=&quot;v_lad_row&quot;&gt;
+					&lt;div class=&quot;v_lad_cell&quot;&gt;&lt;/div&gt;
+					&lt;div class=&quot;v_lad_cell blue&quot;&gt;&lt;/div&gt;
+					&lt;div class=&quot;v_lad_cell &quot;&gt;&lt;/div&gt;
+				&lt;/div&gt;
+				&lt;div class=&quot;v_lad_row&quot;&gt;
+					&lt;div class=&quot;v_lad_cell&quot;&gt;&lt;/div&gt;
+					&lt;div class=&quot;v_lad_cell blue&quot;&gt;&lt;/div&gt;
+					&lt;div class=&quot;v_lad_cell&quot;&gt;&lt;/div&gt;
+				&lt;/div&gt;
+				&lt;div class=&quot;v_lad_row&quot;&gt;
+					&lt;div class=&quot;v_lad_cell&quot;&gt;&lt;/div&gt;
+					&lt;div class=&quot;v_lad_cell blue&quot;&gt;&lt;/div&gt;
+					&lt;div class=&quot;v_lad_cell blue&quot;&gt;&lt;span class=&quot;star&quot;&gt;&amp;#9733;&lt;/span&gt;&lt;/div&gt;
+				&lt;/div&gt;
+				&lt;div class=&quot;v_lad_row&quot;&gt;
+					&lt;div class=&quot;v_lad_cell blue &quot;&gt;&lt;span class=&quot;star&quot;&gt;&amp;#9733;&lt;/span&gt;&lt;/div&gt;
+					&lt;div class=&quot;v_lad_cell blue&quot;&gt;&lt;/div&gt;
+					&lt;div class=&quot;v_lad_cell&quot;&gt;&lt;/div&gt;
+				&lt;/div&gt;
+				&lt;div class=&quot;v_lad_row&quot;&gt;
+					&lt;div class=&quot;v_lad_cell&quot;&gt;&lt;/div&gt;
+					&lt;div class=&quot;v_lad_cell&quot;&gt;&lt;/div&gt;
+					&lt;div class=&quot;v_lad_cell&quot;&gt;&lt;/div&gt;
+				&lt;/div&gt;
+			&lt;/div&gt;
+			&lt;div class=&quot;box&quot; style=&quot;border:50px solid yellow;&quot;&gt;
+				&lt;div class=&quot;circle border_yellow&quot;&gt;&lt;/div&gt;
+				&lt;div class=&quot;circle border_yellow&quot;&gt;&lt;/div&gt;
+				&lt;div class=&quot;circle border_yellow&quot;&gt;&lt;/div&gt;
+				&lt;div class=&quot;circle border_yellow&quot;&gt;&lt;/div&gt;
+			&lt;/div&gt;
+		&lt;/div&gt;
+	&lt;/div&gt;
+&lt;/body&gt;
+&lt;/html&gt;</pre>
 
-/* LOGIN */
-window.login = function(email, password){
-  signInWithEmailAndPassword(auth,email,password)
-  .catch(err => alert(err.message));
-}
+<h2>Complete Code</h2>
 
-/* SIGNUP */
-window.signup = function(email, password){
-  createUserWithEmailAndPassword(auth,email,password)
-  .catch(err => alert(err.message));
-}
+<p>Once you combine HTML and CSS, you will have a <strong>functional Ludo board</strong> ready to use. Here&rsquo;s the full code snippet:</p>
 
-/* LOGOUT */
-window.logout = function(){
-  signOut(auth);
-}
+<h2>Conclusion</h2>
 
-/* AUTO LOGIN UI SWITCH */
-onAuthStateChanged(auth,(user)=>{
-  if(user){
-    document.getElementById("loginPage").style.display="none";
-    document.getElementById("app").style.display="block";
-  }else{
-    document.getElementById("loginPage").style.display="block";
-    document.getElementById("app").style.display="none";
-  }
-});
+<p>Congratulations! 🎉<br />
+You have successfully created a <strong>Ludo game board using HTML and CSS</strong>.</p>
+                                    </div>
+                                     <div class="sharethis-inline-share-buttons" style="margin-top:20px;"></div>
+                                </div>
+                            </div>
+                        </div>
+                                                 <!-- Single Item -->
+                    </div>
+                    <!-- Start Sidebar -->
+                    <div class="sidebar col-md-4">
+                        <aside>
 
-/* CHAT FUNCTION */
-window.sendMessage = async function(){
-  const input = document.getElementById("messageInput");
+                            <!-- Start Sidebar Item -->
+                            <div class="sidebar-item search">
+                                <div class="title">
+                                    <h4>Search</h4>
+                                </div>
+                                <div class="sidebar-info">
+                                    <form action="https://playerofcode.in/home/blog" method="get">
+                                        <input type="text" name="search" class="form-control" placeholder="Search blogs...">
+                                        <input type="submit" value="search">
+                                    </form>
+                                </div>
+                            </div>
+                            <!-- End Sidebar Item -->
+                            <!-- Start Sidebar Item -->
+                            <div class="sidebar-item recent-post">
+                                <div class="title">
+                                    <h4>Recent Posts</h4>
+                                </div>
+                                                                <div class="item">
+                                    <div class="content">
+                                        <div class="thumb">
+                                            <a href="https://playerofcode.in/home/blog_detail/62">
+                                                <img src="https://playerofcode.in/upload/google-ai.png" alt="IIPT">
+                                            </a>
+                                        </div>
+                                        <div class="info">
+                                            <h4>
+                                                <a href="https://playerofcode.in/home/blog_detail/62">Google Launches Workspace Studio: Build Automated Gemini AI Agents Without Coding</a>
+                                            </h4>
+                                        </div>
+                                    </div>
+                                </div>
+                                                            <div class="item">
+                                    <div class="content">
+                                        <div class="thumb">
+                                            <a href="https://playerofcode.in/home/blog_detail/61">
+                                                <img src="https://playerofcode.in/upload/React-Native-Webview-Example.jpg" alt="IIPT">
+                                            </a>
+                                        </div>
+                                        <div class="info">
+                                            <h4>
+                                                <a href="https://playerofcode.in/home/blog_detail/61">How to Create React Native Web App : A Complete Guide</a>
+                                            </h4>
+                                        </div>
+                                    </div>
+                                </div>
+                                                            <div class="item">
+                                    <div class="content">
+                                        <div class="thumb">
+                                            <a href="https://playerofcode.in/home/blog_detail/60">
+                                                <img src="https://playerofcode.in/upload/how-to-solve-nextjs-cors-error.jpg" alt="IIPT">
+                                            </a>
+                                        </div>
+                                        <div class="info">
+                                            <h4>
+                                                <a href="https://playerofcode.in/home/blog_detail/60">Conquer CORS Errors in Your Next.js App: A Guide to Smooth Sailing</a>
+                                            </h4>
+                                        </div>
+                                    </div>
+                                </div>
+                                                            <div class="item">
+                                    <div class="content">
+                                        <div class="thumb">
+                                            <a href="https://playerofcode.in/home/blog_detail/59">
+                                                <img src="https://playerofcode.in/upload/how-to-upload-images-in-react-native-with-firebase.png" alt="IIPT">
+                                            </a>
+                                        </div>
+                                        <div class="info">
+                                            <h4>
+                                                <a href="https://playerofcode.in/home/blog_detail/59">How to Upload Images in React Native with Firebase</a>
+                                            </h4>
+                                        </div>
+                                    </div>
+                                </div>
+                                                            <div class="item">
+                                    <div class="content">
+                                        <div class="thumb">
+                                            <a href="https://playerofcode.in/home/blog_detail/58">
+                                                <img src="https://playerofcode.in/upload/ckeditor5-image-upload-option-in-laravel-11.jpg" alt="IIPT">
+                                            </a>
+                                        </div>
+                                        <div class="info">
+                                            <h4>
+                                                <a href="https://playerofcode.in/home/blog_detail/58">CKeditor5 image upload option in Laravel 11</a>
+                                            </h4>
+                                        </div>
+                                    </div>
+                                </div>
+                                                            <div class="item">
+                                    <div class="content">
+                                        <div class="thumb">
+                                            <a href="https://playerofcode.in/home/blog_detail/57">
+                                                <img src="https://playerofcode.in/upload/how-to-generate-digital-signature-in-react-js.jpeg" alt="IIPT">
+                                            </a>
+                                        </div>
+                                        <div class="info">
+                                            <h4>
+                                                <a href="https://playerofcode.in/home/blog_detail/57">How to Generate Digital Signature in React JS</a>
+                                            </h4>
+                                        </div>
+                                    </div>
+                                </div>
+                                                            <div class="item">
+                                    <div class="content">
+                                        <div class="thumb">
+                                            <a href="https://playerofcode.in/home/blog_detail/56">
+                                                <img src="https://playerofcode.in/upload/how-to-generate-certificate-in-react-js.jpeg" alt="IIPT">
+                                            </a>
+                                        </div>
+                                        <div class="info">
+                                            <h4>
+                                                <a href="https://playerofcode.in/home/blog_detail/56">How to Generate Certificate in React JS</a>
+                                            </h4>
+                                        </div>
+                                    </div>
+                                </div>
+                                                            <div class="item">
+                                    <div class="content">
+                                        <div class="thumb">
+                                            <a href="https://playerofcode.in/home/blog_detail/55">
+                                                <img src="https://playerofcode.in/upload/how-to-update-data-from-firebase-in-react-js.jpg" alt="IIPT">
+                                            </a>
+                                        </div>
+                                        <div class="info">
+                                            <h4>
+                                                <a href="https://playerofcode.in/home/blog_detail/55">How to Update Data from Firebase in React JS</a>
+                                            </h4>
+                                        </div>
+                                    </div>
+                                </div>
+                                                            <div class="item">
+                                    <div class="content">
+                                        <div class="thumb">
+                                            <a href="https://playerofcode.in/home/blog_detail/54">
+                                                <img src="https://playerofcode.in/upload/how-to-delete-data-from-firebase-in-react-js.jpg" alt="IIPT">
+                                            </a>
+                                        </div>
+                                        <div class="info">
+                                            <h4>
+                                                <a href="https://playerofcode.in/home/blog_detail/54">How to Delete Data from Firebase in React JS</a>
+                                            </h4>
+                                        </div>
+                                    </div>
+                                </div>
+                                                            <div class="item">
+                                    <div class="content">
+                                        <div class="thumb">
+                                            <a href="https://playerofcode.in/home/blog_detail/53">
+                                                <img src="https://playerofcode.in/upload/how-to-generate-pdg-in-reactjs-nextjs-vitejs.jpg" alt="IIPT">
+                                            </a>
+                                        </div>
+                                        <div class="info">
+                                            <h4>
+                                                <a href="https://playerofcode.in/home/blog_detail/53">How to create PDF in React JS Next JS Vite Js</a>
+                                            </h4>
+                                        </div>
+                                    </div>
+                                </div>
+                                                            <div class="item">
+                                    <div class="content">
+                                        <div class="thumb">
+                                            <a href="https://playerofcode.in/home/blog_detail/52">
+                                                <img src="https://playerofcode.in/upload/setup-an-htaccess-file-for-redirecting-to-laravels-public-folder.jpg" alt="IIPT">
+                                            </a>
+                                        </div>
+                                        <div class="info">
+                                            <h4>
+                                                <a href="https://playerofcode.in/home/blog_detail/52">Setup An .Htaccess File For Redirecting To Laravel’s Public Folder</a>
+                                            </h4>
+                                        </div>
+                                    </div>
+                                </div>
+                                                            <div class="item">
+                                    <div class="content">
+                                        <div class="thumb">
+                                            <a href="https://playerofcode.in/home/blog_detail/51">
+                                                <img src="https://playerofcode.in/upload/how-to-dockerize-a-nextjs-application-for-beginners.jpg" alt="IIPT">
+                                            </a>
+                                        </div>
+                                        <div class="info">
+                                            <h4>
+                                                <a href="https://playerofcode.in/home/blog_detail/51">How to Dockerize a Next.js Application for beginners.</a>
+                                            </h4>
+                                        </div>
+                                    </div>
+                                </div>
+                                                            <div class="item">
+                                    <div class="content">
+                                        <div class="thumb">
+                                            <a href="https://playerofcode.in/home/blog_detail/50">
+                                                <img src="https://playerofcode.in/upload/customizing-authentication-error-message-for-firebase-in-reactjs.jpg" alt="IIPT">
+                                            </a>
+                                        </div>
+                                        <div class="info">
+                                            <h4>
+                                                <a href="https://playerofcode.in/home/blog_detail/50">Customizing Authentication Error Message for Firebase in ReactJS</a>
+                                            </h4>
+                                        </div>
+                                    </div>
+                                </div>
+                                                            <div class="item">
+                                    <div class="content">
+                                        <div class="thumb">
+                                            <a href="https://playerofcode.in/home/blog_detail/49">
+                                                <img src="https://playerofcode.in/upload/usecontext-hook-in-react-js.png" alt="IIPT">
+                                            </a>
+                                        </div>
+                                        <div class="info">
+                                            <h4>
+                                                <a href="https://playerofcode.in/home/blog_detail/49">useContext Hook in React Js</a>
+                                            </h4>
+                                        </div>
+                                    </div>
+                                </div>
+                                                            <div class="item">
+                                    <div class="content">
+                                        <div class="thumb">
+                                            <a href="https://playerofcode.in/home/blog_detail/48">
+                                                <img src="https://playerofcode.in/upload/Send_Message_on_Whastapp_using_node_js.png" alt="IIPT">
+                                            </a>
+                                        </div>
+                                        <div class="info">
+                                            <h4>
+                                                <a href="https://playerofcode.in/home/blog_detail/48">How to Send Message on Whatsapp using Node JS</a>
+                                            </h4>
+                                        </div>
+                                    </div>
+                                </div>
+                                                            <div class="item">
+                                    <div class="content">
+                                        <div class="thumb">
+                                            <a href="https://playerofcode.in/home/blog_detail/47">
+                                                <img src="https://playerofcode.in/upload/Send_Bulk_Message_on_Whastapp_using_php.png" alt="IIPT">
+                                            </a>
+                                        </div>
+                                        <div class="info">
+                                            <h4>
+                                                <a href="https://playerofcode.in/home/blog_detail/47">How to send Bulk Message on Whatsapp using PHP</a>
+                                            </h4>
+                                        </div>
+                                    </div>
+                                </div>
+                                                            <div class="item">
+                                    <div class="content">
+                                        <div class="thumb">
+                                            <a href="https://playerofcode.in/home/blog_detail/46">
+                                                <img src="https://playerofcode.in/upload/send-message-on-whatsapp-using-php.png" alt="IIPT">
+                                            </a>
+                                        </div>
+                                        <div class="info">
+                                            <h4>
+                                                <a href="https://playerofcode.in/home/blog_detail/46">How to Send Message on Whatsapp using PHP</a>
+                                            </h4>
+                                        </div>
+                                    </div>
+                                </div>
+                                                            <div class="item">
+                                    <div class="content">
+                                        <div class="thumb">
+                                            <a href="https://playerofcode.in/home/blog_detail/45">
+                                                <img src="https://playerofcode.in/upload/how-to-generate-excel-in-react-js.jpg" alt="IIPT">
+                                            </a>
+                                        </div>
+                                        <div class="info">
+                                            <h4>
+                                                <a href="https://playerofcode.in/home/blog_detail/45">How to Generate Excel File in React JS</a>
+                                            </h4>
+                                        </div>
+                                    </div>
+                                </div>
+                                                            <div class="item">
+                                    <div class="content">
+                                        <div class="thumb">
+                                            <a href="https://playerofcode.in/home/blog_detail/44">
+                                                <img src="https://playerofcode.in/upload/Screenshot_2023-09-03_at_2_58_58_PM.png" alt="IIPT">
+                                            </a>
+                                        </div>
+                                        <div class="info">
+                                            <h4>
+                                                <a href="https://playerofcode.in/home/blog_detail/44">How to make Ludo using HTML and CSS</a>
+                                            </h4>
+                                        </div>
+                                    </div>
+                                </div>
+                                                            <div class="item">
+                                    <div class="content">
+                                        <div class="thumb">
+                                            <a href="https://playerofcode.in/home/blog_detail/43">
+                                                <img src="https://playerofcode.in/upload/how-to-loop-through-an-array-in-javascript.jpg" alt="IIPT">
+                                            </a>
+                                        </div>
+                                        <div class="info">
+                                            <h4>
+                                                <a href="https://playerofcode.in/home/blog_detail/43">How to Loop Through an Array in JavaScript</a>
+                                            </h4>
+                                        </div>
+                                    </div>
+                                </div>
+                                                            <div class="item">
+                                    <div class="content">
+                                        <div class="thumb">
+                                            <a href="https://playerofcode.in/home/blog_detail/42">
+                                                <img src="https://playerofcode.in/upload/how-to-make-chessboard-using-html-and-css.jpg" alt="IIPT">
+                                            </a>
+                                        </div>
+                                        <div class="info">
+                                            <h4>
+                                                <a href="https://playerofcode.in/home/blog_detail/42">How to make chessboard using html and css</a>
+                                            </h4>
+                                        </div>
+                                    </div>
+                                </div>
+                                                            <div class="item">
+                                    <div class="content">
+                                        <div class="thumb">
+                                            <a href="https://playerofcode.in/home/blog_detail/41">
+                                                <img src="https://playerofcode.in/upload/how-to-add-image-from-ckeditor-using-reactjs.jpg" alt="IIPT">
+                                            </a>
+                                        </div>
+                                        <div class="info">
+                                            <h4>
+                                                <a href="https://playerofcode.in/home/blog_detail/41">How to add image from Ckeditor using Reactjs</a>
+                                            </h4>
+                                        </div>
+                                    </div>
+                                </div>
+                                                            <div class="item">
+                                    <div class="content">
+                                        <div class="thumb">
+                                            <a href="https://playerofcode.in/home/blog_detail/40">
+                                                <img src="https://playerofcode.in/upload/build-a-react-form-like-a-pro.jpg" alt="IIPT">
+                                            </a>
+                                        </div>
+                                        <div class="info">
+                                            <h4>
+                                                <a href="https://playerofcode.in/home/blog_detail/40">Build a React Form as a Pro || Advance Level</a>
+                                            </h4>
+                                        </div>
+                                    </div>
+                                </div>
+                                                            <div class="item">
+                                    <div class="content">
+                                        <div class="thumb">
+                                            <a href="https://playerofcode.in/home/blog_detail/39">
+                                                <img src="https://playerofcode.in/upload/image-slider-react-js.jpg" alt="IIPT">
+                                            </a>
+                                        </div>
+                                        <div class="info">
+                                            <h4>
+                                                <a href="https://playerofcode.in/home/blog_detail/39">How to make Custom Image Slider in React JS</a>
+                                            </h4>
+                                        </div>
+                                    </div>
+                                </div>
+                                                            <div class="item">
+                                    <div class="content">
+                                        <div class="thumb">
+                                            <a href="https://playerofcode.in/home/blog_detail/38">
+                                                <img src="https://playerofcode.in/upload/todo-list-in-react-js.jpg" alt="IIPT">
+                                            </a>
+                                        </div>
+                                        <div class="info">
+                                            <h4>
+                                                <a href="https://playerofcode.in/home/blog_detail/38">How to make Todo List in React JS</a>
+                                            </h4>
+                                        </div>
+                                    </div>
+                                </div>
+                                                            <div class="item">
+                                    <div class="content">
+                                        <div class="thumb">
+                                            <a href="https://playerofcode.in/home/blog_detail/37">
+                                                <img src="https://playerofcode.in/upload/how-to-read-data-from-firebase-react.jpg" alt="IIPT">
+                                            </a>
+                                        </div>
+                                        <div class="info">
+                                            <h4>
+                                                <a href="https://playerofcode.in/home/blog_detail/37">How to Get Data from Firebase in React JS</a>
+                                            </h4>
+                                        </div>
+                                    </div>
+                                </div>
+                                                            <div class="item">
+                                    <div class="content">
+                                        <div class="thumb">
+                                            <a href="https://playerofcode.in/home/blog_detail/35">
+                                                <img src="https://playerofcode.in/upload/upload-files-to-firebase-cloud-storage-in-firebase.jpg" alt="IIPT">
+                                            </a>
+                                        </div>
+                                        <div class="info">
+                                            <h4>
+                                                <a href="https://playerofcode.in/home/blog_detail/35">How to Upload Image in Firebase Storage</a>
+                                            </h4>
+                                        </div>
+                                    </div>
+                                </div>
+                                                            <div class="item">
+                                    <div class="content">
+                                        <div class="thumb">
+                                            <a href="https://playerofcode.in/home/blog_detail/34">
+                                                <img src="https://playerofcode.in/upload/how-to-calculate-read-time-in-your-blog.jpg" alt="IIPT">
+                                            </a>
+                                        </div>
+                                        <div class="info">
+                                            <h4>
+                                                <a href="https://playerofcode.in/home/blog_detail/34">How to Calculate Read Time of Your Blog</a>
+                                            </h4>
+                                        </div>
+                                    </div>
+                                </div>
+                                                            <div class="item">
+                                    <div class="content">
+                                        <div class="thumb">
+                                            <a href="https://playerofcode.in/home/blog_detail/33">
+                                                <img src="https://playerofcode.in/upload/high-order-component-in-react.jpg" alt="IIPT">
+                                            </a>
+                                        </div>
+                                        <div class="info">
+                                            <h4>
+                                                <a href="https://playerofcode.in/home/blog_detail/33">High Order Component in React</a>
+                                            </h4>
+                                        </div>
+                                    </div>
+                                </div>
+                                                            <div class="item">
+                                    <div class="content">
+                                        <div class="thumb">
+                                            <a href="https://playerofcode.in/home/blog_detail/32">
+                                                <img src="https://playerofcode.in/upload/how-to-create-scroll-to-top-button-in-react.jpg" alt="IIPT">
+                                            </a>
+                                        </div>
+                                        <div class="info">
+                                            <h4>
+                                                <a href="https://playerofcode.in/home/blog_detail/32">How to create scroll to top button in react</a>
+                                            </h4>
+                                        </div>
+                                    </div>
+                                </div>
+                                                        </div>
+                            <!-- End Sidebar Item -->
+                        </aside>
+                    </div>
+                    <!-- End Start Sidebar -->
+                </div>
+            </div>
+        </div>
+    </div>
+ <!-- Start Footer 
+    ============================================= -->
+    <footer class="bg-dark default-padding-top text-light">
+        <div class="container">
+            <div class="row">
+                <div class="f-items">
+                    <div class="col-md-4 item" style="padding-right: 0;">
+                        <div class="f-item">
+                            <center><img src="assets/img/playerofcode.png" alt="Player Of Code" style="height:100px;"></center>
+                            <p class="text-justify " style="padding-right:20px;">
+                                 Unlock the secrets of web development at Player of Code. Dive into our collection of informative blogs and practical source code snippets, crafted to empower developers of all levels. Discover expert insights, tutorials, and real-world solutions that will enhance your coding journey. Join our community and stay ahead in the dynamic realm of web development
+                            </p>
+                            <div class="social_link">
+                                <ul>
+                                    <li class="fb"><a target="_blank" href="https://www.facebook.com/playerofcode"><i class="fab fa-facebook"></i></a></li>
+                                    <li class="insta"><a target="_blank" href="https://www.instagram.com/playerofcode/"><i class="fab fa-instagram"></i></a></li>
+                                    <li class="twitter"><a target="_blank" href="https://twitter.com/playerofcode"><i class="fab fa-twitter"></i></a></li>
+                                    <li class="linkedin"><a target="_blank" href="https://www.linkedin.com/in/playerofcode/"><i class="fab fa-linkedin-in"></i></a></li>
+                                    <li class="github"><a target="_blank" href="https://github.com/playerofcode"><i class="fab fa-github"></i></a></li>
+                                    <li class="youtube"><a target="_blank" href="https://www.youtube.com/playerofcode"><i class="fab fa-youtube"></i></a></li>
+                                </ul>
+                            </div>
+                       <!--      <div class="subscribe">
+                                <form action="#">
+                                    <div class="input-group stylish-input-group">
+                                        <input type="email" placeholder="Enter your e-mail here" class="form-control" name="email">
+                                        <button type="submit">
+                                            <i class="fa fa-paper-plane"></i>
+                                        </button>  
+                                    </div>
+                                </form>
+                            </div> -->
+                        </div>
+                    </div>
+                    <div class="col-md-2 col-sm-6 item">
+                        <div class="f-item link">
+                            <h4>Links</h4>
+                            <ul>
+                                <li>
+                                    <a href="https://playerofcode.in/our-blog">Blog</a>
+                                </li>
+                                <li>
+                                    <a href="https://playerofcode.in/source-code">Source Code</a>
+                                </li>
+                                <li>
+                                    <a href="https://playerofcode.in/gallery">Gallery</a>
+                                </li>
+                                <li>
+                                    <a href="https://playerofcode.in/faq">Faqs</a>
+                                </li>
+                                <li>
+                                    <a href="https://playerofcode.in/team">Team</a>
+                                </li>
+                                <li>
+                                    <a href="https://playerofcode.in/contact-us">Contact</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-md-4 item">
+                        <div class="f-item address">
+                            <h4>Address</h4>
+                            <ul>
+                                <li>
+                                    <i class="fas fa-envelope"></i> 
+                                    <p>Email <span><a href="mailto:playerofcode@gmail.com">playerofcode@gmail.com</a></span></p>
+                                </li>
+                                <li>
+                                    <i class="fas fa-map"></i> 
+                                    <p>Office <span style="text-transform: capitalize;">Lucknow,UP, India</span></p>
+                                </li>
+                            </ul>
+                            <div class="opening-info">
+                                <script src="https://apis.google.com/js/platform.js"></script>
 
-  if(!input.value.trim()) return;
+<div class="g-ytsubscribe" data-channelid="UC3LmyV6QFoHa1xHAT_ydgkg" data-layout="full" data-count="default"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Start Footer Bottom -->
+        <div class="footer-bottom">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="col-md-6">
+                            <p>&copy; Copyright 2021. All Rights Reserved by <a href="https://playerofcode.in/">Player Of Code</a></p>
+                        </div>
+                        <div class="col-md-6 text-right link">
+                            <ul>
+                                <li>
+                                    <a href="https://playerofcode.in/privacy-policy">Privacy Policy</a>
+                                </li>
+                                <li>
+                                    <a href="https://playerofcode.in/terms-condition">Terms & Conditions</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- End Footer Bottom -->
+    </footer>   
+    <!-- End Footer -->
 
-  await addDoc(collection(db,"messages"),{
-    text: input.value,
-    createdAt: serverTimestamp()
-  });
-
-  input.value="";
-}
-
-/* LOAD MESSAGES */
-const q = query(collection(db,"messages"),orderBy("createdAt"));
-
-onSnapshot(q,(snapshot)=>{
-  const box = document.getElementById("messages");
-  box.innerHTML="";
-
-  snapshot.forEach(doc=>{
-    const data = doc.data();
-    const div = document.createElement("div");
-    div.className="message";
-    div.innerText = data.text;
-    box.appendChild(div);
-  });
-
-  box.scrollTop = box.scrollHeight;
-});
-</script>
-
-</body>
-</html>
+    <!-- jQuery Frameworks
+    ============================================= -->
+    <script src="assets/js/jquery-1.12.4.min.js"></script>
+    <script src="assets/js/bootstrap.min.js"></script>
+    <script src="assets/js/equal-height.min.js"></script>
+    <script src="assets/js/jquery.appear.js"></script>
+    <script src="assets/js/jquery.easing.min.js"></script>
+    <script src="assets/js/jquery.magnific-popup.min.js"></script>
+    <script src="assets/js/modernizr.custo
