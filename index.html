@@ -45,6 +45,7 @@ font-weight:bold;
 .play{background:#00ff88;}
 .room{background:#3b82f6;color:white;}
 .join{background:#f59e0b;color:white;}
+.login{background:#ff4d6d;color:white;}
 
 #roomCode{
 display:none;
@@ -63,6 +64,7 @@ border-radius:10px;
 
 <p>Online Multiplayer Ludo</p>
 
+<button class="login" onclick="login()">Login with Google</button>
 <button class="play" onclick="play()">Play Offline</button>
 <button class="room" onclick="createRoom()">Create Room</button>
 <button class="join" onclick="joinRoom()">Join Room</button>
@@ -71,25 +73,57 @@ border-radius:10px;
 
 </div>
 
-<script>
+<script type="module">
 
-function play(){
+// ================= FIREBASE IMPORTS =================
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import { getAuth, GoogleAuthProvider, signInWithPopup } 
+from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+
+// ================= FIREBASE CONFIG =================
+const firebaseConfig = {
+  apiKey: "AIzaSyDzh_o3laTWFYqpQeMpDY6PsTDXlNhjtnM",
+  authDomain: "snhit-ludo.firebaseapp.com",
+  projectId: "snhit-ludo",
+  storageBucket: "snhit-ludo.firebasestorage.app",
+  messagingSenderId: "539128132475",
+  appId: "1:539128132475:web:8922b738348ea01046c3de"
+};
+
+// ================= INIT FIREBASE =================
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const provider = new GoogleAuthProvider();
+
+// ================= LOGIN FUNCTION =================
+window.login = async function(){
+try {
+const result = await signInWithPopup(auth, provider);
+alert("Welcome " + result.user.displayName);
+console.log(result.user);
+} catch (e) {
+alert("Login Failed");
+}
+}
+
+// ================= OLD FUNCTIONS =================
+window.play = function(){
 alert("Offline Mode Coming Soon");
 }
 
-function createRoom(){
-const code=Math.floor(100000+Math.random()*900000);
+window.createRoom = function(){
+const code = Math.floor(100000 + Math.random()*900000);
 
-document.getElementById("roomCode").style.display="block";
-document.getElementById("roomCode").innerHTML=
-"Room Code: <b>"+code+"</b>";
+document.getElementById("roomCode").style.display = "block";
+document.getElementById("roomCode").innerHTML =
+"Room Code: <b>" + code + "</b>";
 }
 
-function joinRoom(){
-let room=prompt("Enter Room Code");
+window.joinRoom = function(){
+let room = prompt("Enter Room Code");
 
 if(room){
-alert("Joining Room: "+room);
+alert("Joining Room: " + room);
 }
 }
 
